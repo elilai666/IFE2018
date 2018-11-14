@@ -1,0 +1,39 @@
+/*初始化设置*/
+html {
+    font-size: 16px;
+}
+dt,dd,ul,li{
+    margin: 0;
+    padding: 0;
+}
+
+ul li {
+    display: inline-block;
+}
+ul li:nth-child(n+2) {
+    margin-left: 1rem;
+}
+li>span, dt{
+    font-weight: bold;
+}
+
+dl div:nth-child(n+2) {
+    margin-top: 1rem;
+}
+
+#title {
+    background: #65a5fa;
+    color: #fff;
+    min-height: 600px;
+    height: 900px;
+    width: 200px;
+    text-align: center;
+    padding-top: 60px;
+    margin: 0;
+    float: left;
+}
+#desc {
+    overflow: hidden;
+    padding-left: 1rem;
+}
+

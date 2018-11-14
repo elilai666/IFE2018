@@ -1,0 +1,16 @@
+ul {
+    padding: 0;
+}
+li {
+    list-style-type: none;
+}
+html {
+    font-size: 16px;
+    background: #00dbb4;
+}
+p>span {
+    font-weight: bold;
+}
+a:hover {
+    color: red;
+}

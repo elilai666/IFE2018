@@ -1,0 +1,56 @@
+/*初始化设置*/
+html {
+    font-size: 16px;
+}
+dt,dd,ul,li{
+    margin: 0;
+    padding: 0;
+}
+
+ul li {
+    display: inline-block;
+}
+ul li:nth-child(n+2) {
+    margin-left: 1rem;
+}
+li>span, dt{
+    font-weight: bold;
+}
+
+#title {
+    background: #858585;
+    margin: 0;
+    height: 3rem;
+    font-size: 1.2rem;
+    line-height: 3rem;
+    color: #fff;
+    padding-left: 1rem;
+}
+
+#desc {
+    display: table;
+    width: 100%;
+}
+.tr {
+    display: table-row;
+
+}
+#desc h2 {
+
+    margin: 0;
+    width: 5rem;
+    height: 6rem;
+    line-height: 6rem;
+    font-size: 1rem;
+    background: #d6d6d6;
+}
+
+#desc h2, #desc ul, #desc dl {
+    display: table-cell;
+    border: 1px solid #e3e3e3;
+    padding-left: 1rem;
+}
+
+#desc dt,dd {
+    display: inline-block;
+}
