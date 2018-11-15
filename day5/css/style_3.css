@@ -6,7 +6,6 @@ dt,dd,ul,li{
     margin: 0;
     padding: 0;
 }
-
 ul li {
     display: inline-block;
 }
@@ -16,7 +15,6 @@ ul li:nth-child(n+2) {
 li>span, dt{
     font-weight: bold;
 }
-
 #title {
     background: #858585;
     margin: 0;
@@ -26,17 +24,11 @@ li>span, dt{
     color: #fff;
     padding-left: 1rem;
 }
-
 #desc {
     display: table;
     width: 100%;
 }
-.tr {
-    display: table-row;
-
-}
 #desc h2 {
-
     margin: 0;
     width: 5rem;
     height: 6rem;
@@ -44,13 +36,22 @@ li>span, dt{
     font-size: 1rem;
     background: #d6d6d6;
 }
-
-#desc h2, #desc ul, #desc dl {
+h2, ul, dl {
     display: table-cell;
-    border: 1px solid #e3e3e3;
     padding-left: 1rem;
 }
+ul, dl {
+    vertical-align: top;
+    padding-top: 1rem;
+}
 
-#desc dt,dd {
+dt, dd {
     display: inline-block;
+}
+
+dl>div:nth-child(n+2) {
+    margin-top: 0.5rem;
+}
+.tr {
+    border: 1px solid #e3e3e3;
 }
