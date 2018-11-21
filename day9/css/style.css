@@ -261,8 +261,8 @@ url("../images/banner_bg.png") no-repeat;
     height: 100%;
 }
 .portrait-box>section {
-    width: calc(50% - 10px);
-    margin-bottom: 20px;
+    width: 48%;
+    margin-bottom: 4%;
     position: relative;
 }
 .portrait-box>section:hover::after {
@@ -287,13 +287,82 @@ url("../images/banner_bg.png") no-repeat;
     overflow: hidden;
 }
 #sixth-part form, #contact-box {
-    width: 50%;
+    width: calc(50% - 10px);
     float: left;
     box-sizing: border-box;
 }
 #sixth-part form {
     border: 1px solid #858585; 
+    padding: 20px 40px;
+    margin-right: 20px;
 }
-#sixth-part form {
+#sixth-part form>* {
+    width: 100%;
+    display: block;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    font-size: 1.1rem;
+    font-family: 'Montserrat ExtraLight', sans-serif;
+}
+#sixth-part form>input {
+    height: 40px;
+}
+#sixth-part form>textarea {
+    height: 120px;
+    resize: none;
+}
+#sixth-part form>button {
+    height: 40px;
+    background: #000000;
+    color: #ffffff;
+    border: none;
+    border-radius: 3px;
+}
+#sixth-part h3 {
+    font-weight: 400;
+    font-size: 1.3rem;
+}
+#contact-box {
+    padding-left: 5%;
+    padding-top: 5%;
+    text-align: left; 
+}
+#contact-box>p {
+    opacity: 0.5;
+    margin-bottom: 60px;
     
+}
+#contact-box>section {
+    margin-bottom: 30px;
+}
+#contact-box>section>img {
+    float: left;
+}
+#contact-box>section>p {
+    margin-left: 40px;
+    vertical-align: top;
+}
+/* footer部分 */
+footer {
+    background: #141414;
+    color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    padding: 50px 15%;
+    flex-wrap: nowrap;
+}
+footer>section {
+    flex: 1;
+}
+footer h3 {
+    font-weight: 400;
+}
+footer h3, footer p {
+    margin: 0;
+}
+footer>section>*:nth-child(n+2){
+    margin-top: 15px;
+}
+footer p {
+    opacity: 0.5;
 }
