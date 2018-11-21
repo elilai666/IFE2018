@@ -1,0 +1,299 @@
+html, body {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    font-family: 'Montserrat ExtraLight', sans-serif;
+    font-size: 16px;
+}
+section, div {
+    box-sizing: border-box;
+}
+/*header 部分*/
+header {
+    width: 100%;
+    height: 850px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.5),rgba(0,0,0,0.5)),
+url("../images/banner_bg.png") no-repeat;
+    background-size: cover;
+    color: #ffffff;
+}
+#title-box {
+    text-align: center;
+    padding-top: 150px;
+}
+#title-box h1 {
+    font-size: 4rem;
+    font-weight: 100;
+    margin:0 auto 50px;
+    text-transform: capitalize;
+
+}
+#title-box p {
+    width: 40%;
+    margin: 0 auto;
+    opacity: 0.5;
+    line-height: 2;
+}
+#sign-up-box {
+    margin: 100px auto 0;
+    padding: 70px 0;
+    width: 60%;
+    text-align: center;
+    border: 1px solid #858585;
+}
+#sign-up-box h2, #sign-up-box p {
+    text-transform: uppercase;
+}
+#sign-up-box h2 {
+    font-weight: 400;
+    font-size: 1.5rem;
+    margin: 0 auto 10px;
+}
+#sign-up-box p {
+    opacity: 0.5;
+    margin: 0;
+}
+#sign-up-box form {
+    margin-top: 30px;
+}
+#sign-up-box input, #sign-up-box button {
+    display: inline-block;
+    height: 50px;
+    box-sizing: border-box;
+    padding: 0 15px;
+    font-size: 1.1rem;
+}
+#sign-up-box input {
+    background: rgba(0,0,0,0);
+    border: 1px solid #858585;
+    color: #ffffff;
+    width: 30%;
+}
+#sign-up-box button {
+    font-weight: bold;
+    width: 20%;
+    border-radius: 2px;
+    border: 1px solid rgba(0,0,0,0);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+#sign-up-box input:nth-child(2) {
+    margin: 0 20px;
+}
+/*第一部分*/
+#first-part {
+    padding: 100px 15%;
+    height: 750px;
+}
+#first-part > p {
+    text-align: center;
+}
+#first-part > p:nth-child(2) {
+    width: 60%;
+    margin: 0 auto 50px;
+    font-size: 2rem;
+}
+.float-box {
+    float: left;
+    width: calc(50% - 20px);
+    height: 200px;
+}
+.float-box:nth-child(2n) {
+    margin-left: 40px;
+}
+.img-wrapper {
+    float: left;
+    width: 50px;
+    text-align: center;
+    position: relative;
+    top: 8px;
+}
+.float-box>article {
+    overflow: hidden;/*形成BFC*/
+    padding-left: 20px;
+}
+.float-box>article>h3 {
+    margin-top: 0;
+}
+.float-box p {
+    opacity: 0.5;
+}
+/*第二部分*/
+#second-part {
+    height: 750px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.5),rgba(0,0,0,0.5)),
+    url("../images/middle_bg.png") no-repeat;
+    background-size: cover;
+    color: #ffffff;
+    position: relative;
+}
+#info-box {
+    width: 50%;
+    padding-left:20%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+#info-box>p:first-child {
+    font-size: 2rem;
+    margin-bottom: 40px;
+}
+#info-box>p:nth-child(2) {
+    opacity: 0.5;
+    line-height:2;
+    margin-bottom: 40px;
+}
+#info-box button {
+    display: inline-block;
+    height: 50px;
+    box-sizing: border-box;
+    width: calc(49% - 20px);
+    border-radius: 2px;
+    border: 1px solid rgba(256,256,256,0.3);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    background-color: rgba(0,0,0,0);
+    color: #ffffff;
+}
+#info-box button:nth-of-type(2) {
+    margin-left: 20px;
+}
+#info-box button.active {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+#ipad {
+    position: absolute;
+    top:50%;
+    right: 0;
+    transform: translateY(-50%);
+    padding: 25px 0 25px 50px;
+    border: 1px solid rgba(256,256,256,0.3);
+    border-radius: 40px 0 0 40px;
+}
+#ipad::after {
+    content: "";
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    border: 1px solid rgba(256,256,256,0.3);
+    top: 50%;
+    left: 25px;
+    border-radius: 100%;
+}
+/*第三部分*/
+#third-part {
+    padding: 100px 0 50px;
+    text-align: center;
+}
+#third-part h2 {
+    font-size: 2.5rem;
+    font-weight: 100;
+    margin: 0 auto 80px;
+}
+.flex-box {
+    display: flex;
+    width: 60%;
+    margin: 0 auto;
+    justify-content: space-between;
+}
+.flex-box>article {
+    width: 30%;
+}
+.flex-box p {
+    padding: 0 10px;
+}
+/*第四部分*/
+#fourth-part {
+    border-top: 1px solid rgba(0,0,0,0.3);
+    padding: 80px 0 80px;
+}
+#fourth-part>section:nth-child(1)>img {
+    float: left;
+}
+#fourth-part>section:nth-child(1)>article {
+    overflow: hidden;
+    padding-left: 50px;
+    padding-top: 50px;
+}
+#fourth-part>section {
+    overflow: hidden;
+    width: 60%;
+    margin: 0 auto;
+    position: relative;
+}
+#fourth-part>section:nth-child(1) {
+    margin-bottom: 50px;
+}
+#fourth-part>section:nth-child(2)>img {
+    float: right;
+}
+#fourth-part>section:nth-child(2)>article {
+    overflow: hidden;
+    padding-right: 50px;
+    padding-top: 50px;
+}
+/*第五部分*/
+#fifth-part {
+    border-top: 1px solid rgba(0,0,0,0.3);
+    padding: 100px 0;
+    text-align: center;
+}
+#fifth-part h2 {
+    font-size: 2rem;
+    font-weight: 100;
+}
+#fifth-part>p {
+    padding: 0 25%;
+    opacity: 0.5;
+    margin-bottom: 80px;
+}
+.portrait-box {
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.portrait-box img {
+    width: 100%;
+    height: 100%;
+}
+.portrait-box>section {
+    width: calc(50% - 10px);
+    margin-bottom: 20px;
+    position: relative;
+}
+.portrait-box>section:hover::after {
+    content: "";
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: #333333 url("../images/portrait_mask.png");
+    background-size: 100% 100%;
+    opacity: 0.7;
+    cursor: pointer;
+}
+/*第六部分*/
+#sixth-part {
+    border-top: 1px solid rgba(0,0,0,0.3);
+    padding: 80px 20%;
+    text-align: center;
+    overflow: hidden;
+}
+#sixth-part form, #contact-box {
+    width: 50%;
+    float: left;
+    box-sizing: border-box;
+}
+#sixth-part form {
+    border: 1px solid #858585; 
+}
+#sixth-part form {
+    
+}

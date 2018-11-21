@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="实现一个三栏布局，左侧固定宽度，中间固定宽度，右侧根据浏览器宽度变化而自适应变化">
+    <title>三栏布局，右边自适应-pistion</title>
+    <style>
+        header, footer {
+            height: 50px;
+            width: 100%;
+            background: #858585;
+            clear:both;
+        }
+        html, body {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+
+        .container {
+            height: 100%;
+            position: relative;
+        }
+        .center {
+            width: 300px;
+            height: 100%;
+            background: #dbdb1d;
+            position: absolute;
+            top: 0;
+            left: 310px;
+        }
+        .left {
+            background: red;
+            width: 300px;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .right {
+            background: #00dbb4;
+            height: 100%;
+            margin-left: 620px;
+        }
+
+    </style>
+</head>
+
+<body>
+<header>header</header>
+<div class="container">
+    <div class="center">center</div>
+    <div class="left">left</div>
+    <div class="right">right</div>
+</div>
+<footer>footer</footer>
+</body>
+</html>
