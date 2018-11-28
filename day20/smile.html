@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+    #smile-img {
+        width: 480px;
+        height: 480px;
+        background: url("images/erik_ce204002.jpg") no-repeat;
+        background-position: 0px 0px;
+    }
+    </style>
+    <title>Smile帧动画</title>
+</head>
+<body>
+    <div id="smile-img">
+
+    </div>
+    <script>    
+            var img_height = 8160;
+            var div_height = 480;
+            var simle_img =  document.getElementById("smile-img");
+            var top_to_bottom = true;
+            var move_distance = 0;
+            var pos_y = 0;
+            simle_img.style.backgroundPositionY = "0"; //初始化
+            setInterval(imageMove, 70);
+            
+            function imageMove() {
+                pos_y = parseInt(simle_img.style.backgroundPositionY);
+                //如果是正向移动，移动距离为负div高度，否则为正
+                move_distance = top_to_bottom ? -div_height : div_height;
+                pos_y = pos_y + move_distance;
+                // 控制正向和负向播放
+                if (pos_y === div_height-img_height) {
+                    top_to_bottom = false;
+                }else if(pos_y === 0){
+                    top_to_bottom = true;
+                }
+                simle_img.style.backgroundPositionY = pos_y + 'px';
+            }
+       </script>
+</body>
+
+</html>
