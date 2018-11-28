@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resume</title>
+    <link rel="stylesheet" href="css/normalize.css">
+
+    <link rel="stylesheet" href="css/style_2.css">
+    <script>
+            // 今天最后一个练习，在你的简历中，实现一个，当用户访问页面的时候，根据当前时间，在页面中输出不同的问候语。
+            
+            // 比如早上的时候，输出早上好，晚上的时候是晚上好。
+            window.onload = function() {
+                var now = new Date();
+                var hour = now.getHours();
+                var say_hi = hour<12 ? "早上好" : "晚上好";
+                console.log(say_hi);
+            }
+    </script>
+</head>
+<body>
+<h1 id="title">简历</h1>
+<div id="desc">
+    <div class="tr">
+    <h2>基本信息</h2>
+    <ul>
+        <li><span>姓名</span> 张三</li>
+        <li><span>性别</span> 男</li>
+        <li><span>职位</span> Web前端</li>
+    </ul>
+    </div>
+    <div class="tr">
+    <h2>联系方式</h2>
+    <ul>
+        <li><span>手机</span> 123123123</li>
+        <li><span>Email</span> xxx@123.com</li>
+        <li><span>个人主页</span> <a href="http://baidu.com">Github</a></li>
+    </ul>
+    </div>
+    <div class="tr">
+    <h2>能力描述</h2>
+    <dl>
+        <div>
+        <dt>技术能力</dt>
+        <dd>熟练掌握XXXXX</dd>
+        </div>
+        <div>
+        <dt>综合能力</dt>
+        <dd>良好的沟通能力，主动积极</dd>
+        </div>
+    </dl>
+    </div>
+    <div class="tr">
+    <h2>教育经历</h2>
+    <dl>
+        <div>
+        <dt>本科</dt>
+        <dd>xxxx大学</dd>
+        </div>
+        <div>
+        <dt>研究生</dt>
+        <dd>xxxx大学</dd>
+        </div>
+    </dl>
+    </div>
+    <div class="tr">
+    <h2>项目经历</h2>
+    <dl>
+        <div>
+        <dt>项目1</dt>
+        <dd>作为XXX参与</dd>
+        </div>
+        <div>
+        <dt>项目2</dt>
+        <dd>作为XXX参与</dd>
+        </div>
+    </dl>
+    </div>
+</div>
+
+</body>
+</html>

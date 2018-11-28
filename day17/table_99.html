@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>99乘法表</title>
+    
+</head>
+<body>
+    <table id="table_99" border="1">
+    </table>
+
+    <script>
+            let table_99 = document.getElementById("table_99");
+            function creat_table(table_node) {
+                let row = 9;
+                let line = 9;
+                for (let n = 1; n < row + 1; n++) {
+                    let tr = table_node.appendChild(document.createElement("tr"));
+                    for (let m = n; m < line + 1; m++) {
+                        let td = tr.appendChild(document.createElement("td"));
+                        result = n + "x" + m + "=" + n * m;
+                        td.innerHTML = result;
+                    }
+                }   
+            }
+            creat_table(table_99);
+        </script>
+</body>
+</html>
