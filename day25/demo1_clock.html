@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>时钟</title>
+</head>
+<body>
+<p id="clock"></p>
+<p id="clock2"></p>
+<script !src="">
+    // 在页面中显示当前日期及时间，按秒更新
+    // 格式为 YYYY 年 MM 月 DD 日 星期 D HH:mm:ss
+
+    // 封装一个函数，来根据某个日期返回这一天是星期几
+    // 封装一个函数，把月、日、小时等出现个位数的情况前面补充0，补充为两位，比如1变为01
+    // 封装一个函数，把最后的日期时间，按照要求的格式进行包装
+    // 可能不止上面这些，尽可能地进行功能的解耦和拆解
+    var clock = document.getElementById("clock");
+    var clock2 = document.getElementById("clock2");
+
+    setInterval(getDate, 500);
+
+    function getDate() {
+        let now = new Date();
+        let year = now.getFullYear();
+        let month = formatTime(now.getMonth() + 1);
+        let day = formatTime(now.getDate());
+        let dayOfWeek1 = now.getDayOfWeek("cn");
+        let dayOfWeek2 = now.getDayOfWeek("en");
+        let hour = formatTime(now.getHours());
+        let min = formatTime(now.getMinutes());
+        let sec = formatTime(now.getSeconds());
+        clock.innerText = transformDate(year, month, day, dayOfWeek1, hour, min, sec);
+        clock2.innerText = transformDate2(year, month, day, dayOfWeek2, hour, min, sec);
+    }
+    // 封装一个函数，来根据某个日期返回这一天是星期几
+    Date.prototype.getDayOfWeek = function (lang) {
+        if (lang !== "cn" && lang !== "en") {
+            lang = "cn";
+        }
+        let weekObj = {
+            "cn" : [
+                "星期日",
+                "星期一",
+                "星期二",
+                "星期三",
+                "星期四",
+                "星期五",
+                "星期六",
+            ],
+            "en" : [
+                "Sunday",
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday"
+            ]
+        };
+        return weekObj[lang][this.getDay()];
+    };
+    // 封装一个函数，把月、日、小时等出现个位数的情况前面补充0，补充为两位，比如1变为01
+    function formatTime(time) {
+        if (time < 10) {
+            time = "0" + time;
+        }
+        return time.toString();
+    }
+    // 封装一个函数，把最后的日期时间，按照要求的格式进行包装
+    //YYYY 年 MM 月 DD 日 星期 D HH:mm:ss
+    function transformDate(year, month, day, weekDay, hour, min, sec) {
+        return year + "年" + month + "月" + day + "日" + " " + weekDay + " " + hour + ":" + min + ":" + sec;
+    }
+    //输出格式变为：2008-10-10 Monday 07:10:30 PM
+    function transformDate2(year, month, day, weekDay, hour, min, sec) {
+        let time;
+        if (hour > 12) {
+            hour = hour - 12;
+            formatTime(hour);
+            time = hour + ":" + min + ":" + sec + " PM";
+        } else {
+            time = hour + ":" + min + ":" + sec + " AM";
+        }
+
+        return year + "-" + month + "-" + day + "-" + " " + weekDay + " " + time;
+    }
+
+</script>
+</body>
+</html>

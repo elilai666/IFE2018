@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        ul {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+    </style>
+    <title>给爱的人发个邮件吧</title>
+</head>
+<body>
+<div class="wrapper">
+    <input id="email-input" type="text" placeholder="Input your email">
+    <ul id="email-sug-wrapper" class="email-sug"></ul>
+</div>
+<script !src="">
+    // 根据下面需求实现如示意图所示的邮箱输入提示功能，注意，根据要求只需实现下面功能
+    //
+    // 当用户没有任何输入时，提示框消失
+    // 当用户输入字符后，显示提示框，并且把用户输入的内容自动拼上邮箱后缀进行显示
+    // 暂时不用考虑示意图中的红色和蓝色背景色的逻辑
+    // 注意用户输入中前后空格需要去除
+    // 邮箱后缀List参考
+    var postfixList = ['163.com', 'gmail.com', '126.com', 'qq.com', '263.net'];
+    var input = document.getElementById("email-input");
+    var sugList = document.getElementById("email-sug-wrapper");
+
+    input.oninput = function () {
+        let userInput = getInput();
+        addSugLi(generateSugLi(userInput));
+        controlSug();
+    };
+    //拿到input输入框的输入内容trim后返回
+    function getInput() {
+        return input.value.trim();
+    }
+    //生成提示框中的提示内容
+    function generateSugLi(input) {
+        if (input) {
+            let sugList = [];
+            for (i in postfixList) {
+                sugList.push("<li>" + input + "@" + postfixList[i] + "</li>");
+            }
+            return sugList.join("");
+        } else {
+            return ""
+        }
+    }
+    //提示内容添加到email-sug-wrapper中
+    function addSugLi(liContent) {
+        sugList.innerHTML = liContent;
+    }
+    // 控制email-sug-wrapper的显示/隐藏状态
+    function controlSug() {
+        if (input.value === "") {
+            hideSug();
+        } else {
+            displaySug();
+        }
+    }
+    function hideSug() {
+        sugList.hidden = true;
+    }
+    function displaySug() {
+        sugList.hidden = false;
+    }
+
+</script>
+</body>
+</html>

@@ -52,8 +52,9 @@
         [7, "Area1-2-3", 4],
         [8, "Area2-2-1", 6],
     ];
-    var obj = {};
+
     function arrToObj() {
+        var obj = {};
         for(index in menuArr){
             let name = menuArr[index][1];
             let key = menuArr[index][0];
@@ -72,23 +73,28 @@
                 }
 
             }
+
         }
-        function findParent(key, parent) {
-            if (!parent) {
-                return null;
-            }
-            if (key in parent) {
-                return parent[key];
-            } else {
-                for(i in parent){
-                    if (parent[i].subMenu) {
-                        return findParent(key, parent[i].subMenu);
+        return obj;
+    }
+    function findParent(key, parent) {
+        if (!parent) {
+            return null;
+        }
+        if (key in parent) {
+            return parent[key];
+        } else {
+            for(i in parent){
+                if (parent[i].subMenu) {
+                    let tmp_node = findParent(key, parent[i].subMenu);
+                    if (tmp_node) {
+                        return tmp_node;
                     }
                 }
             }
         }
     }
-    console.log(JSON.stringify(arrToObj()));
+    console.log(arrToObj());
 </script>
 </body>
 </html>
