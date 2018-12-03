@@ -42,7 +42,6 @@ body {
 
 /*header 部分*/
 header {
-    width: 100%;
     height: 850px;
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
         url("../images/banner_bg.png") no-repeat;
@@ -369,8 +368,6 @@ header {
     width: 100%;
     display: block;
     margin-bottom: 20px;
-    font-size: 1.1rem;
-    font-family: 'Montserrat ExtraLight', sans-serif;
 }
 #sixth-block form>input,
 #sixth-block form>textarea {
@@ -406,7 +403,6 @@ header {
 #sixth-block__contact-box>p {
     opacity: 0.5;
     margin-bottom: 40px;
-
 }
 #sixth-block__contact-box>section {
     margin-bottom: 30px;

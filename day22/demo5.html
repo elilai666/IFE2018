@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>数组</title>
+</head>
+<body>
+<input id="queue-input" type="text">
+<p id="queue-cont">队列内容：apple-&gt;pear</p>
+<button id="in-btn">入队</button>
+<button id="out-btn">出队</button>
+<button id="font-btn">打印队头元素内容</button>
+<button id="empty-btn">判断队列是否为空</button>
+
+<script>
+    // 实现如阅读材料中，队列的相关入队、出队、获取队头、判空的操作
+    // 队头对应数组中最后一个元素
+    // 入队和出队操作后，需要在 id 为 queue-cont 的 p 标签中更新显示队列中的内容，队头在最右侧，中间用 -> 连接（练习使用数组的join方法）
+
+    var queue = ["apple", "pear"];
+    var queue_input = document.getElementById("queue-input");
+    var queue_cont = document.getElementById("queue-cont");
+    var in_btn = document.getElementById("in-btn");
+    var out_btn = document.getElementById("out-btn");
+    var font_btn = document.getElementById("font-btn");
+    var empty_btn = document.getElementById("empty-btn");
+
+    in_btn.onclick = function () {
+        if (queue_input.value) {
+            queue.unshift(queue_input.value);
+            displayQueue();
+        } else {
+            alert("check input!");
+        }
+    };
+
+    out_btn.onclick = function () {
+        if (queue.length !== 0) {
+            queue.pop();
+            displayQueue();
+        } else {
+            alert("队列空了！");
+        }
+    };
+
+    font_btn.onclick = function () {
+        if (queue.length !== 0) {
+            queue_cont.innerText = "队头：" + queue[queue.length - 1];
+        } else {
+            queue_cont.innerText = "空队列！"
+        }
+    };
+
+    empty_btn.onclick = function () {
+        if (queue.length !== 0) {
+            queue_cont.innerText = "队列不为空！";
+        } else {
+            queue_cont.innerText = "空队列！";
+        }
+    };
+
+    function displayQueue() {
+        queue_cont.innerText = "队列内容：" + queue.join("->");
+    }
+
+</script>
+</body>
+</html>
