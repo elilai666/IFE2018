@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>我是精明的小卖家（一）</title>
+</head>
+<body>
+<form id="input-form" action="">
+<span class="title">区域：</span>
+ <label for="region_1"><input type="radio" id="region_1" name="region" value="华东">华东</label>
+ <label for="region_2"><input type="radio" id="region_2" name="region" value="华南">华南</label>
+ <label for="region_3"><input type="radio" id="region_3" name="region" value="华北">华北</label>
+<br>
+<span class="title">产品：</span>
+<label for="product_1"><input type="radio" id="product_1" name="product" value="手机">手机</label>
+<label for="product_2"><input type="radio" id="product_2" name="product" value="笔记本">笔记本</label>
+<label for="product_3"><input type="radio" id="product_3" name="product" value="智能音箱">智能音箱</label>
+</form>
+<div id="table-wrapper">
+</div>
+<script>
+    let sourceData = [{
+        product: "手机",
+        region: "华东",
+        sale: [120, 100, 140, 160, 180, 185, 190, 210, 230, 245, 255, 270]
+    }, {
+        product: "手机",
+        region: "华北",
+        sale: [80, 70, 90, 110, 130, 145, 150, 160, 170, 185, 190, 200]
+    }, {
+        product: "手机",
+        region: "华南",
+        sale: [220, 200, 240, 250, 260, 270, 280, 295, 310, 335, 355, 380]
+    }, {
+        product: "笔记本",
+        region: "华东",
+        sale: [50, 60, 80, 110, 30, 20, 70, 30, 420, 30, 20, 20]
+    }, {
+        product: "笔记本",
+        region: "华北",
+        sale: [30, 35, 50, 70, 20, 15, 30, 50, 710, 130, 20, 20]
+    }, {
+        product: "笔记本",
+        region: "华南",
+        sale: [80, 120, 130, 140, 70, 75, 120, 90, 550, 120, 110, 100]
+    }, {
+        product: "智能音箱",
+        region: "华东",
+        sale: [10, 30, 4, 5, 6, 5, 4, 5, 6, 5, 5, 25]
+    }, {
+        product: "智能音箱",
+        region: "华北",
+        sale: [15, 50, 15, 15, 12, 11, 11, 12, 12, 14, 12, 40]
+    }, {
+        product: "智能音箱",
+        region: "华南",
+        sale: [10, 40, 10, 6, 5, 6, 8, 6, 6, 6, 7, 26]
+    }];
+    let tableBox = document.getElementById("table-wrapper");
+    let formBox = document.getElementById("input-form");
+
+    formBox.onchange= function(e) {
+        let target = e.target;
+        if (target.name === "region") {
+            // 选中地区
+            let data = getDataByRegion(target.value);
+            renderTable(data);
+        } else if (target.name === "product") {
+            console.log(target.id);
+        }
+    };
+
+    function getDataByRegion(region) {
+        let data = [];
+        for (let dataItem of sourceData) {
+            if (dataItem.region === region) {
+                data.push(dataItem);
+            }
+        }
+        return data;
+    }
+
+    function createTable(data) {
+        //生成表格
+        let table = document.createElement("table");
+        table.border = "1";
+        let thead = document.createElement("thead");
+        let tbody = document.createElement("tbody");
+        table.appendChild(thead);
+        table.appendChild(tbody);
+        // 生成thead
+        let tr = document.createElement("tr");
+        thead.appendChild(tr);
+        tr.appendChild(makeElement("th", "地区"));
+        tr.appendChild(makeElement("th", "商品"));
+        for (i = 1; i < 13; i++) {
+            tr.appendChild(makeElement("th", i + "月"));
+        }
+        // 生成tbody
+        for (i = 0; i < data.length; i++){
+            let tr = document.createElement("tr");
+            // 第一条
+            if (i === 0) {
+                let region_col = makeElement("td", data[i].region);
+                region_col.rowSpan = data.length;
+                tr.appendChild(region_col);
+            }
+            tr.appendChild(makeElement("td", data[i].product));
+
+            for (let salesNum of data[i].sale) {
+                tr.appendChild(makeElement("td", salesNum));
+            }
+            tbody.appendChild(tr);
+        }
+        return table;
+
+    }
+    function renderTable(data) {
+        let table = createTable(data);
+        tableBox.innerHTML = table.outerHTML;
+    }
+
+    function makeElement(tag, content) {
+        let tagNode = document.createElement(tag);
+        tagNode.innerText = content;
+        return tagNode;
+    }
+</script>
+</body>
+</html>

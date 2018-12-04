@@ -3,10 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <style>
+        html {
+            font-size: 16px;
+        }
+        #email-input {
+            width: 300px;
+            line-height: 2rem;
+            box-sizing: border-box;
+            border: 1px solid #aaaaaa;
+            padding: 0 .4rem;
+            font-size: inherit;
+        }
         ul {
             padding: 0;
             margin: 0;
             list-style: none;
+            border: 1px solid #aaaaaa;
+            width: 300px;
+            box-sizing: border-box;
+            color: #aaaaaa;
+        }
+        li {
+            line-height: 2rem;
+            padding: 0 .4rem;
+            font-size: inherit;
+            /*超长换行*/
+            word-break: break-all;
+            cursor: pointer;
+        }
+        li:hover {
+            background: #bcdfe6;
+        }
+        li.select {
+            background: #ffc5cf;
         }
     </style>
     <title>给爱的人发个邮件吧</title>
@@ -14,7 +43,7 @@
 <body>
 <div class="wrapper">
     <input id="email-input" type="text" placeholder="Input your email">
-    <ul id="email-sug-wrapper" class="email-sug"></ul>
+    <ul id="email-sug-wrapper" class="email-sug" hidden></ul>
 </div>
 <script !src="">
     // 根据下面需求实现如示意图所示的邮箱输入提示功能，注意，根据要求只需实现下面功能
@@ -27,31 +56,121 @@
     var postfixList = ['163.com', 'gmail.com', '126.com', 'qq.com', '263.net'];
     var input = document.getElementById("email-input");
     var sugList = document.getElementById("email-sug-wrapper");
+    var nowSelectTipIndex = 0;
+    //页面加载后直接选中输入框
+    input.focus();
 
+    // 输入框有输入事件
     input.oninput = function () {
         let userInput = getInput();
         addSugLi(generateSugLi(userInput));
         controlSug();
     };
+
+    // 列表点击事件
+    sugList.onclick = function (e) {
+        let targetNode = e.target;
+        if (targetNode.parentElement === this) {
+            // 点击后将list内容添加到输入框，隐藏建议list
+            // 这里一定要用textContent，如果用innerHtml遇到<b>这样的会被转义
+            input.value = targetNode.textContent;
+            hideSug();
+            // 框消失后依然激活输入框
+            input.focus();
+        }
+    };
+
+    // 键盘事件
+    document.body.addEventListener("keydown", function (e) {
+        //ArrowUp  ArrowDown  Escape
+        if (sugList.hasChildNodes()) {
+            if (e.key === "ArrowUp") {
+                if (nowSelectTipIndex === 0) {
+                    nowSelectTipIndex = sugList.children.length - 1;
+                } else {
+                    nowSelectTipIndex--;
+                }
+                setSelection();
+            } else if (e.key === "ArrowDown") {
+                if (nowSelectTipIndex === sugList.children.length - 1) {
+                    nowSelectTipIndex = 0;
+                } else {
+                    nowSelectTipIndex++;
+                }
+                setSelection();
+            } else if (e.key === "Escape") {
+                // 用户按ESC键的时候，对用户输入进行全选
+                input.select();
+            } else if (e.key === "Enter") {
+                input.value = sugList.children[nowSelectTipIndex].textContent;
+                hideSug();
+            }
+        }
+    }, false);
     //拿到input输入框的输入内容trim后返回
     function getInput() {
-        return input.value.trim();
+        // 对内容转码，防止XSS攻击
+        let inputContent = input.value;
+        return htmlEncode(inputContent).trim();
     }
+
+    // html转码
+    var htmlEncode = function(html) {
+        var temp = document.createElement('div');
+        temp.textContent != undefined ? temp.textContent = html : temp.innerText = html;
+        return temp.innerHTML;
+    };
+    // html解码
+    var htmlDecode = function(html) {
+        var temp = document.createElement('div');
+        temp.innerHTML = html;
+        return temp.innerText || temp.textContent;
+    };
     //生成提示框中的提示内容
     function generateSugLi(input) {
         if (input) {
+            let postfix;
             let sugList = [];
+            let matchList = [];
+            let at_index = input.indexOf("@");
+            if (at_index !== -1) {
+                postfix = input.slice(at_index + 1);
+                input = input.slice(0, at_index);
+            }
             for (i in postfixList) {
+                if (postfixList[i].indexOf(postfix) === 0) {
+                    matchList.push("<li>" + input + "@" + postfixList[i] + "</li>");
+                }
                 sugList.push("<li>" + input + "@" + postfixList[i] + "</li>");
+            }
+            if (matchList.length > 0) {
+                return matchList.join("")
             }
             return sugList.join("");
         } else {
-            return ""
+            return "";
         }
     }
     //提示内容添加到email-sug-wrapper中
     function addSugLi(liContent) {
         sugList.innerHTML = liContent;
+        resetIndex();
+        setSelection();
+    }
+    // 重置nowSelectTipIndex
+    function resetIndex() {
+        nowSelectTipIndex = 0;
+    }
+    // 设置list中第一条的选中态
+    function setSelection() {
+        if (sugList.hasChildNodes()) {
+            let selectedLi = document.querySelector("li.select");
+            // 清除以前的选中态
+            if (selectedLi) {
+                selectedLi.className = "";
+            }
+            sugList.children[nowSelectTipIndex].className = "select";
+        }
     }
     // 控制email-sug-wrapper的显示/隐藏状态
     function controlSug() {
