@@ -1,0 +1,19 @@
+table {
+    collapse: 1;
+    border-collapse: collapse;
+}
+table, th, td {
+    border: 1px solid;
+}
+thead {
+    color: #fff;
+    background: #111;
+}
+tr:nth-child(2n) {
+    background: #eee;
+}
+th, td {
+    width: 80px;
+    height: 50px;
+    text-align: center;
+}
