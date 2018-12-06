@@ -14,25 +14,17 @@ window.onload = function() {
     var input = document.getElementById("name");
     var btn = document.getElementById("submit-btn");
 
-    btn.onclick = function() {
+    btn.onclick = function () {
         console.log(input.value);
-    }
-    document.body.onkeydown = function(e) {
+    };
+    document.body.onkeydown = function (e) {
         if (e.key === "Enter") {
             btn.onclick();
         }
         if (e.key === "Escape") {
             input.value = '';
         }
-    }
-    // document.body.addEventListener('keydown', function(e){
-    //     if (e.key === "Enter") {
-    //         btn.onclick();
-    //     }
-    //     if (e.key === "Escape") {
-    //         input.value = '';
-    //     }
-    // }, false);
+    };
 }
 </script>
 <body>

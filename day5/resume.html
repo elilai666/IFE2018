@@ -3,8 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Resume</title>
+    <style>
+        #color-switch {
+            top: 50px;
+            right: 100px;
+            position: fixed;
+            cursor: pointer;
+        }
+        #style1 {
+            background: #e3e3e3;
+        }
+        #style2 {
+            background: #65a5fa;
+        }
+        #style3 {
+            background: #858585;
+        }
+    </style>
     <link rel="stylesheet" href="css/normalize.css">
-
     <link rel="stylesheet" href="css/style_2.css">
 </head>
 <body>
@@ -23,7 +39,7 @@
     <ul>
         <li><span>手机</span> 123123123</li>
         <li><span>Email</span> xxx@123.com</li>
-        <li><span>个人主页</span> <a href="http://baidu.com">Github</a></li>
+        <li><span>个人主页</span> <a href="http://github.com">Github</a></li>
     </ul>
     </div>
     <div class="tr">
@@ -66,5 +82,25 @@
     </dl>
     </div>
 </div>
+<div id="color-switch">
+    <span id="style1">Style1</span>
+    <span id="style2">Style2</span>
+    <span id="style3">Style3</span>
+</div>
 </body>
+<script>
+    var colorSwitch = document.getElementById("color-switch");
+    colorSwitch.onclick = function (e) {
+        let target = e.target;
+        let style = document.head.getElementsByTagName("link")[1];
+        if (target.id === "style1") {
+            style.href = "./css/style_1.css";
+        } else if (target.id === "style2") {
+            style.href = "./css/style_2.css";
+        } else if (target.id === "style3") {
+            style.href = "./css/style_3.css";
+        }
+
+    };
+</script>
 </html>
