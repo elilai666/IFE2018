@@ -13,8 +13,25 @@ tr:nth-child(2n) {
     background: #eee;
 }
 th, td {
-    width: 80px;
+    width: 100px;
     height: 50px;
     text-align: center;
-    cursor: default;
+}
+.sales {
+    cursor: pointer;
+}
+.mouse-point::after {
+    content: " Edit";
+    font-size: 13px;
+    color: #666;
+}
+#table-wrapper input {
+    width: 70px;
+}
+#table-wrapper button {
+    width: 40px;
+    font-size: 10px;
+    background: rgba(0,0,0,0);
+    border: none;
+    color: #fa4928;
 }
