@@ -1,8 +1,8 @@
 const init = () => {
     let tableBox = document.getElementById("table-wrapper");
     let formBox = document.getElementById("input-form");
-    const REGIONS = ['华东', '华南', '华北'];
-    const PRODUCTS = ['手机', '笔记本', '智能音箱'];
+    const REGIONS = ['华东', '华北', '华南'];
+    const PRODUCTS = ['手机', '智能音箱', '笔记本'];
     const TRANSLATION = {
         "region": "区域",
         "product": "产品"
@@ -52,31 +52,29 @@ const init = () => {
     tableBox.onmouseover = function (e) {
         let target = e.target;
         if (target.className === "sales" && target.children.length === 0) {
+            console.log("mouse over! :" + target.innerHTML);
             target.className += " mouse-point";
         }
     };
     tableBox.onmouseout = function (e) {
         let target = e.target;
         if (target.className.indexOf("mouse-point") !== -1) {
+            console.log("mouse out! :" + target.innerHTML);
             target.className = target.className.split(" ")[0];
         }
     };
-    let backupNode;
-    tableBox.onmousedown = function (e) {
-
+    tableBox.onclick = function (e) {
         let target = e.target;
-        console.log("mousedown:" + target.innerHTML);
         // 点击销量
         if (target.className.indexOf("mouse-point") !== -1) {
+            console.log("click mouse-point:" + target.innerHTML);
             //去掉Edit
             target.className = target.className.split(" ")[0];
-            // if (target !== backupNode)restoreBackupNode(backupNode);
             // 备份点击的单元格
             target.setAttribute("sale", target.innerText);
-            backupNode = target;
             target.innerHTML = `<input type="text" value="${target.innerText}">`;
             // 激活并选中输入框内容
-            // target.firstElementChild.focus();
+            target.firstElementChild.focus();
             target.firstElementChild.select();
             let saveBth = document.createElement("button");
             saveBth.className = "save-btn";
@@ -94,22 +92,22 @@ const init = () => {
                 //确认是整数，保存
                 let saleInfoArr = target.parentElement.getAttribute("data-key").split(" ");
                 saveData(value, saleInfoArr);
-                target.parentElement.setAttribute("sale", value);
-                restoreBackupNode(backupNode);
-                backupNode = null;
+                target.parentElement.setAttribute("sale", Number(value));
             } else {
                 alert("请检查输入");
             }
-        } else {
-
         }
     };
 
     // onfocusout 支持冒泡 onblur不支持
     tableBox.addEventListener("focusout", (e) => {
-        console.log("focusout:" + e.target);
-        // restoreBackupNode(backupNode);
-        // backupNode = null;
+        //延时执行，先响应点击
+        setTimeout(function () {
+            let target = e.target;
+            if (target.tagName === "INPUT") {
+                restoreBackupNode(target.parentElement);
+            }
+        }, 200);
     }, false);
 
     function restoreBackupNode(node) {
@@ -228,7 +226,7 @@ const init = () => {
         let firstKey = regionNum <= productNum ? "region" : "product";
         let secondKey = regionNum > productNum ? "region" : "product";
         // 选项较少的那个作为key来进行排序
-        data.sort((a, b) => a[firstKey] > b[firstKey] ? 1 : -1);
+        data.sort((a, b) => a[firstKey] > b[firstKey] || (a[firstKey] === b[firstKey] && a[secondKey] > b[secondKey]) ? 1 : -1);
         let table = document.createElement("table");
         // table.border = "1";
         let thead = document.createElement("thead");

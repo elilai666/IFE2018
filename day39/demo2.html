@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>location 2</title>
+</head>
+<body>
+<button id="a">A</button>
+<button id="b">B</button>
+<button id="c">C</button>
+
+<button id="d">D</button>
+<button id="e">E</button>
+<button id="f">F</button>
+
+
+<div id="contABC"></div>
+<div id="contDEF"></div>
+<script !src="">
+    // abc点击了，把按钮文字显示在contABC中
+    // def点击了，把按钮文字显示在contDEF中
+    // 同样在页面刷新时，保留之前的渲染状态
+    // 页面URL copy再打开后，保留渲染状态
+    let cont1 = document.getElementById("contABC");
+    let cont2 = document.getElementById("contDEF");
+    renderPage();
+    function getHashValue() {
+        return  window.location.hash.slice(1).split(",");
+    }
+    function setHashValue(value, index) {
+        let hashValueArr = getHashValue();
+        hashValueArr[index] = value;
+        window.location.hash = "#" + hashValueArr.join(",")
+    }
+    function renderPage() {
+        let hashValueArr = getHashValue();
+        cont1.innerText = hashValueArr[0] || "";
+        cont2.innerText = hashValueArr[1] || "";
+    }
+    window.onhashchange = function () {
+        renderPage();
+    };
+    document.body.onclick = function (e) {
+        let target = e.target;
+        if (target.id.match(/^[abc]$/)) {
+            setHashValue(target.innerText, 0);
+        } else if (target.id.match(/^[def]$/)){
+            setHashValue(target.innerText, 1);
+        }
+    }
+
+</script>
+</body>
+</html>
