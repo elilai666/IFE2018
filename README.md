@@ -38,3 +38,6 @@
 ### day 37
 - [任务](http://ife.baidu.com/course/detail/id/56)
 - [作业](https://elilai666.github.io/IFE2018/day37/MIS.html)
+### day 39
+- [任务](http://ife.baidu.com/course/detail/id/57)
+- [作业](https://elilai666.github.io/IFE2018/day39/MIS.html)
