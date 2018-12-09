@@ -17,15 +17,20 @@ const init = () => {
     fromObj.generateCheckbox(document.getElementById("region-checkbox-wrapper"), REGIONS);
     fromObj.generateCheckbox(document.getElementById("product-checkbox-wrapper"), PRODUCTS);
     renderPage();
+    // 渲染整个页面
     function renderPage() {
-        checkSelections();
         let hashValue = routerObj.getHashValue();
         let selectedRegions = [];
         let selectedProducts = [];
-        if (!hashValue) {
+        if (hashValue === "111111" || !hashValue) {
             selectedRegions = REGIONS;
             selectedProducts = PRODUCTS;
+            //全选
+            for (let ele of formBox.getElementsByTagName("input")) {
+                ele.checked = true;
+            }
         } else {
+            checkSelections(hashValue);
             let regionsState = hashValue.slice(0, 3);
             let productState = hashValue.slice(3);
             for (let i in regionsState) {
@@ -42,11 +47,106 @@ const init = () => {
         let data = dataObj.getDataBy(selectedRegions, selectedProducts);
         tableObj.updateTable(data, selectedRegions.length, selectedProducts.length);
     }
-    function checkSelections() {
+    function checkSelections(switchState) {
         let inputs = document.getElementsByTagName("input");
-        inputs = inputs.filter(e => e.id.indexOf("_all") === -1);
-        console.log(inputs);
+        inputs = Array.prototype.slice.call(inputs);
+        // 筛选出除全选外的选项
+        let inputs_arr = inputs.filter(e => e.id.indexOf("_all") === -1);
+        for (let i in switchState) {
+            if (switchState[i] === "1") {
+                inputs_arr[i].checked = true ;
+            } else {
+                inputs_arr[i].checked = false ;
+            }
+        }
     }
+
+    window.onpopstate = function (e) {
+        renderPage();
+    };
+
+    formBox.onchange = function (e) {
+        let target = e.target;
+        // 点击全选
+        fromObj.checkOptions(target);
+        let selectedRegions = fromObj.getCheckedOptions("region");
+        let selectedProducts = fromObj.getCheckedOptions("product");
+        let regionsState = "";
+        let productState = "";
+        for (let region of REGIONS) {
+            if (selectedRegions.includes(region)) {
+                regionsState += "1";
+            } else {
+                regionsState += "0";
+            }
+        }
+        for (let product of PRODUCTS) {
+            if (selectedProducts.includes(product)) {
+                productState += "1";
+            } else {
+                productState += "0";
+            }
+        }
+        routerObj.setHashValue(regionsState + productState);
+        renderPage();
+    };
+    tableBox.onmouseover = function (e) {
+        let target = e.target;
+        if (target.className === "sales" && target.children.length === 0) {
+            target.className += " mouse-point";
+        }
+    };
+    tableBox.onmouseout = function (e) {
+        let target = e.target;
+        if (target.className.indexOf("mouse-point") !== -1) {
+            target.className = target.className.split(" ")[0];
+        }
+    };
+    tableBox.onclick = function (e) {
+        let target = e.target;
+        // 点击销量
+        if (target.className.indexOf("mouse-point") !== -1) {
+            //去掉Edit
+            target.className = target.className.split(" ")[0];
+            // 备份点击的单元格
+            target.setAttribute("sale", target.innerText);
+            target.innerHTML = `<input type="text" value="${target.innerText}">`;
+            // 激活并选中输入框内容
+            target.firstElementChild.focus();
+            target.firstElementChild.select();
+            let saveBth = document.createElement("button");
+            saveBth.className = "save-btn";
+            saveBth.innerText = "保存";
+            let cancelBth = document.createElement("button");
+            cancelBth.className = "cancel-btn";
+            cancelBth.innerText = "取消";
+            // 添加保存和取消按钮
+            target.appendChild(saveBth);
+            target.appendChild(cancelBth);
+        }else if (target.className === "save-btn") {
+            // 点击保存按钮
+            let value = target.parentElement.getElementsByTagName("input")[0].value;
+            if (value.match(/^[0-9]+$/)) {
+                //确认是整数，保存
+                let saleInfoArr = target.parentElement.getAttribute("data-key").split(" ");
+                dataObj.updeData(value, saleInfoArr);
+                target.parentElement.setAttribute("sale", Number(value));
+            } else {
+                alert("请检查输入");
+            }
+        }
+    };
+    // onfocusout 支持冒泡 onblur不支持
+    tableBox.addEventListener("focusout", (e) => {
+        //延时执行，先响应点击
+        setTimeout(function () {
+            let target = e.target;
+            if (target.tagName === "INPUT") {
+                tableObj.restoreBackupNode(target.parentElement);
+            }
+        }, 200);
+    }, false);
+
 
     // 数据模块
     function Data(data) {
@@ -102,7 +202,7 @@ const init = () => {
         }
     }
     // 表单模块
-    function Form(wrapper) {
+    function Form() {
         // 在给定的wrapper里面生成optionsArr里包含的选项
         this.generateCheckbox = function (wrapper, optionsArr) {
             let idPrefix = wrapper.id.split("-")[0];
@@ -271,98 +371,12 @@ const init = () => {
     //路由模块
     function Router() {
         this.getHashValue = function () {
-            return window.location.hash.slice(1);
+            return window.location.hash.slice(1, 7);
         };
         this.setHashValue = function (value) {
             history.pushState({}, null, "#" + value);
-            // window.location.hash = "#" + hashValueArr.join(",")
         };
     }
-
-
-    formBox.onchange = function (e) {
-        let target = e.target;
-        // 点击全选
-        fromObj.checkOptions(target);
-        let selectedRegions = fromObj.getCheckedOptions("region");
-        let selectedProducts = fromObj.getCheckedOptions("product");
-        let data = dataObj.getDataBy(selectedRegions, selectedProducts);
-        let regionsState = "";
-        let productState = "";
-        for (let region of REGIONS) {
-            if (selectedRegions.includes(region)) {
-                regionsState += "1";
-            } else {
-                regionsState += "0";
-            }
-        }
-        for (let product of PRODUCTS) {
-            if (selectedProducts.includes(product)) {
-                productState += "1";
-            } else {
-                productState += "0";
-            }
-        }
-        routerObj.setHashValue(regionsState + productState);
-
-        tableObj.updateTable(data, selectedRegions.length, selectedProducts.length);
-    };
-    tableBox.onmouseover = function (e) {
-        let target = e.target;
-        if (target.className === "sales" && target.children.length === 0) {
-            target.className += " mouse-point";
-        }
-    };
-    tableBox.onmouseout = function (e) {
-        let target = e.target;
-        if (target.className.indexOf("mouse-point") !== -1) {
-            target.className = target.className.split(" ")[0];
-        }
-    };
-    tableBox.onclick = function (e) {
-        let target = e.target;
-        // 点击销量
-        if (target.className.indexOf("mouse-point") !== -1) {
-            //去掉Edit
-            target.className = target.className.split(" ")[0];
-            // 备份点击的单元格
-            target.setAttribute("sale", target.innerText);
-            target.innerHTML = `<input type="text" value="${target.innerText}">`;
-            // 激活并选中输入框内容
-            target.firstElementChild.focus();
-            target.firstElementChild.select();
-            let saveBth = document.createElement("button");
-            saveBth.className = "save-btn";
-            saveBth.innerText = "保存";
-            let cancelBth = document.createElement("button");
-            cancelBth.className = "cancel-btn";
-            cancelBth.innerText = "取消";
-            // 添加保存和取消按钮
-            target.appendChild(saveBth);
-            target.appendChild(cancelBth);
-        }else if (target.className === "save-btn") {
-            // 点击保存按钮
-            let value = target.parentElement.getElementsByTagName("input")[0].value;
-            if (value.match(/^[0-9]+$/)) {
-                //确认是整数，保存
-                let saleInfoArr = target.parentElement.getAttribute("data-key").split(" ");
-                dataObj.updeData(value, saleInfoArr);
-                target.parentElement.setAttribute("sale", Number(value));
-            } else {
-                alert("请检查输入");
-            }
-        }
-    };
-    // onfocusout 支持冒泡 onblur不支持
-    tableBox.addEventListener("focusout", (e) => {
-        //延时执行，先响应点击
-        setTimeout(function () {
-            let target = e.target;
-            if (target.tagName === "INPUT") {
-                tableObj.restoreBackupNode(target.parentElement);
-            }
-        }, 200);
-    }, false);
 };
 init();
 
