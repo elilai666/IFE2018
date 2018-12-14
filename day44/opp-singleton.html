@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OPP-单例模式</title>
+</head>
+<body>
+在Console查看
+<script !src="">
+    // 餐厅类
+    // 属性：金钱，座位数量、职员列表
+    // 方法：招聘职员，解雇职员
+
+    class Restaurant {
+        constructor({cash, seats, staffs}) {
+            this.seats = seats;
+            this.cash = cash;
+            this.staffs = staffs;
+            console.log("餐厅开张了！");
+        }
+        hire (staff) {
+            let i = this.staffs.indexOf(staff);
+            if (i === -1) {
+                this.staffs.push(staff);
+                console.log("聘用了" + staff.name);
+            } else {
+                console.log("This staff " + staff.name + " already exists!")
+            }
+        }
+        fire (staff) {
+            let i = this.staffs.indexOf(staff);
+            if (i !== -1) {
+                this.staffs.splice(i, 1);
+                console.log("辞退了" + staff.name);
+            } else {
+                console.log("This staff " + staff.name + " does not exist!")
+            }
+        }
+    }
+
+    // 职员类
+    // 属性：ID，姓名，工资
+    // 方法：完成一次工作
+    class Staff {
+        constructor (name, salary) {
+            if (Staff.id) {
+                this.id = Staff.id + 1;
+            } else {
+                Staff.id = 1;
+                this.id = Staff.id
+            }
+            this.name = name;
+            this.salary = salary;
+        }
+        doJob () {
+            console.log(this.name + "has finished 1 job!")
+        }
+    }
+
+    // 服务员类，继承自职员
+    // 完成一次工作
+    class Server extends Staff {
+        constructor (name, salary) {
+            super(name, salary);
+            // 单例模式
+            if (Server.instance) {
+                return Server.instance;
+            }
+            Server.instance = this;
+        }
+        doJob(customer) {
+            let dish = customer.order();
+            console.log(this.name + "记录" + customer.name + " 点餐：" + dish.name);
+            return dish;
+        }
+        tellChef(chef, dish) {
+            console.log(this.name + "告诉了" + chef.name + " 点餐：" + dish.name);
+            let cookedDish = chef.doJob(dish);
+            return cookedDish
+        }
+        serve(customer, dish) {
+            customer.eat(dish);
+        }
+    }
+    // 厨师类，继承自职员
+    // 完成一次工作：烹饪出菜品
+    class Chef extends Staff {
+        constructor (name, salary) {
+            super(name, salary);
+            // 单例模式
+            if (Chef.instance) {
+                return Chef.instance;
+            }
+            Chef.instance = this;
+        }
+        doJob (dish) {
+            let cookedDish = new Dish(dish);
+            console.log('厨师' + this.name + "出餐了" + cookedDish.name);
+            return cookedDish;
+        };
+    }
+    // 顾客类
+    // 方法：点菜，吃
+    class Customer {
+        constructor (name) {
+            this.name = name;
+        }
+        order () {
+            let dishIndex = Math.trunc(Math.random() * MENU.length);
+            console.log("顾客" + this.name + "点餐" + MENU[dishIndex].name);
+            return MENU[dishIndex];
+        }
+        eat (dish) {
+            console.log(this.name + "吃了" + dish.name);
+        }
+    }
+
+    // 菜品类
+    // 属性：名字、烹饪成本、价格
+    class Dish {
+        constructor ({name, cost, price}) {
+            this.name = name;
+            this.cost = cost;
+            this.price = price;
+        }
+    }
+
+    class CustormerMaker {
+        constructor(nameArr) {
+            this.nameArr = nameArr;
+        }
+        // Generator 方法
+        * [Symbol.iterator] () {
+            for (let name of this.nameArr) {
+                yield new Customer(name);
+            }
+        }
+    }
+/*    我们假设只有一个厨师，一个服务员，一个座位。而且餐厅老板是个偏执狂，他喜欢简单，他需要保证餐厅永远只有一个厨师，一个服务员和一个座位。
+整个餐厅的运作流程是这样的，顾客入座，服务员招待顾客点菜，点完菜后告诉厨师，厨师做好菜后服务员上菜，顾客用餐，然后换下一个顾客
+    你需要设计一个菜单，然后设计一个顾客随机点菜的方法*/
+    // 首先，我们需要重新来设计我们的厨师、服务员的类，阅读上面的文章，按照单例的方式来进行设计
+    // 第二，我们需要解决对象与对象之间的交流问题，在这个简单的餐厅中，当顾客入座时，服务员使用服务点菜方法，调用顾客的点菜方法得到顾客点的菜，然后服务员去告诉厨师需要做什么菜，厨师开始做菜，做完菜以后告诉服务员去上菜，上菜完成后，顾客开始用餐，吃完后，下一个顾客进来。在这个流程中，你可以给每个类都创建对应的交流沟通相关的方法来实现。
+    // 第三，实现一个顾客队列
+    // 第四，实现一个菜单，包括菜名、价格，然后实现一个点菜的方法，我们默认顾客每次只点一个菜
+    const MENU = [
+        {name: '青椒肉丝', price:100, cost:50},
+        {name: '干煸大排', price:200, cost:100},
+        {name: '土豆丝', price:300, cost:200}];
+    let myResturant = new Restaurant({
+        cash:100000,
+        seats: 1,
+        staffs: []});
+    let server = new Server('小老弟', 1000);
+    let chef = new Chef("大老哥", 2000);
+    myResturant.hire(server);
+    myResturant.hire(chef);
+    const customerNameArr = ["周", "吴", "郑", "王"];
+    let customerMaker = new CustormerMaker(customerNameArr);
+    for (const customer of customerMaker) {
+        console.log(customer.name.padEnd(20, "*"));
+        //点餐
+        let dish = server.doJob(customer);
+        //告诉厨师做菜
+        let cookedDish = server.tellChef(chef, dish);
+        //出菜
+        server.serve(customer, cookedDish);
+    }
+
+
+
+
+
+
+
+
+
+
+
+</script>
+</body>
+</html>

@@ -19,46 +19,9 @@ const init = () => {
     renderPage();
     // 渲染整个页面
     function renderPage() {
-        let hashValue = routerObj.getHashValue();
-        let selectedRegions = [];
-        let selectedProducts = [];
-        if (hashValue === "111111" || !hashValue) {
-            selectedRegions = REGIONS;
-            selectedProducts = PRODUCTS;
-            //全选
-            for (let ele of formBox.getElementsByTagName("input")) {
-                ele.checked = true;
-            }
-        } else {
-            checkSelections(hashValue);
-            let regionsState = hashValue.slice(0, 3);
-            let productState = hashValue.slice(3);
-            for (let i in regionsState) {
-                if (regionsState[i] === "1") {
-                    selectedRegions.push(REGIONS[i]);
-                }
-            }
-            for (let i in productState) {
-                if (productState[i] === "1") {
-                    selectedProducts.push(PRODUCTS[i]);
-                }
-            }
-        }
-        let data = dataObj.getDataBy(selectedRegions, selectedProducts);
-        tableObj.updateTable(data, selectedRegions.length, selectedProducts.length);
-    }
-    function checkSelections(switchState) {
-        let inputs = document.getElementsByTagName("input");
-        inputs = Array.prototype.slice.call(inputs);
-        // 筛选出除全选外的选项
-        let inputs_arr = inputs.filter(e => e.id.indexOf("_all") === -1);
-        for (let i in switchState) {
-            if (switchState[i] === "1") {
-                inputs_arr[i].checked = true ;
-            } else {
-                inputs_arr[i].checked = false ;
-            }
-        }
+        let selectObj = routerObj.parseSelections();
+        let data = dataObj.getDataBy(selectObj.selectedRegions, selectObj.selectedProducts);
+        tableObj.updateTable(data, selectObj.selectedRegions.length, selectObj.selectedProducts.length);
     }
 
     window.onpopstate = function (e) {
@@ -376,6 +339,47 @@ const init = () => {
         this.setHashValue = function (value) {
             history.pushState({}, null, "#" + value);
         };
+        function checkSelections(switchState) {
+            let inputs = document.getElementsByTagName("input");
+            inputs = Array.prototype.slice.call(inputs);
+            // 筛选出除全选外的选项
+            let inputs_arr = inputs.filter(e => e.id.indexOf("_all") === -1);
+            for (let i in switchState) {
+                if (switchState[i] === "1") {
+                    inputs_arr[i].checked = true ;
+                } else {
+                    inputs_arr[i].checked = false ;
+                }
+            }
+        }
+        this.parseSelections = function() {
+            let hashValue = this.getHashValue();
+            let selectedRegions = [];
+            let selectedProducts = [];
+            if (hashValue === "111111" || !hashValue) {
+                selectedRegions = REGIONS;
+                selectedProducts = PRODUCTS;
+                //全选
+                for (let ele of formBox.getElementsByTagName("input")) {
+                    ele.checked = true;
+                }
+            } else {
+                checkSelections(hashValue);
+                let regionsState = hashValue.slice(0, 3);
+                let productState = hashValue.slice(3);
+                for (let i in regionsState) {
+                    if (regionsState[i] === "1") {
+                        selectedRegions.push(REGIONS[i]);
+                    }
+                }
+                for (let i in productState) {
+                    if (productState[i] === "1") {
+                        selectedProducts.push(PRODUCTS[i]);
+                    }
+                }
+            }
+            return {"selectedRegions": selectedRegions, "selectedProducts": selectedProducts};
+        }
     }
 };
 init();

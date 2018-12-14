@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OPP</title>
+</head>
+<body>
+
+<script !src="">
+    // 餐厅类
+    // 属性：金钱，座位数量、职员列表
+    // 方法：招聘职员，解雇职员
+    function Restaurant(cash, seats, staff) {
+        this.cash = cash;
+        this.seats = seats;
+        this.staff = staff;
+    }
+
+    Restaurant.prototype.hire = function (staff) {
+        let i = this.staff.indexOf(staff);
+        if (i === -1) {
+            this.staff.push(staff);
+        } else {
+            console.log("This staff " + staff.name + " already exists!")
+        }
+    };
+    Restaurant.prototype.fire = function (staff) {
+        let i = this.staff.indexOf(staff);
+        if (i !== -1) {
+            this.staff.splice(i, 1);
+        } else {
+            console.log("This staff " + staff.name + " does not exist!")
+        }
+    };
+    // 职员类
+    // 属性：ID，姓名，工资
+    // 方法：完成一次工作
+    function Staff(id, name, salary) {
+        this.id = id;
+        this.name = name;
+        this.salary = salary;
+    }
+    Staff.prototype.doJob = function () {
+        console.log(this.name + "has finished 1 job!")
+    };
+    // 服务员类，继承自职员
+    // 完成一次工作：如果参数是个数组，则记录客人点菜，如果参数不是数组则是上菜行为
+    function Server(id, name, salary) {
+        Staff.call(this, id, name, salary);
+    }
+    Server.prototype = Object.create(Staff.prototype);
+    Server.prototype.constructor = Server;
+    Server.prototype.doJob = function (dishes) {
+        if (Array.isArray(dishes)) {
+            console.log(this.name + "记录点餐：" + dishes.join(","))
+        } else {
+            console.log(this.name +"上菜了！")
+        }
+    };
+    // 厨师类，继承自职员
+    // 完成一次工作：烹饪出菜品
+    function Chef(id, name, salary) {
+        Staff.call(this, id, name, salary);
+    }
+    Chef.prototype = Object.create(Staff.prototype);
+    Chef.prototype.constructor = Chef;
+    Chef.prototype.doJob = function () {
+        console.log(this.name + "出餐了")
+    };
+    
+    // 顾客类
+    // 方法：点菜，吃
+    function Custormer(name) {
+        this.name = name;
+    }
+
+    Custormer.prototype.order = function (dishes) {
+        console.log(this.name + "点餐" + dishes.join(","));
+    };
+    Custormer.prototype.eat = function (dish) {
+        console.log(this.name + "吃了" + dish);
+    };
+
+    // 菜品类
+    // 属性：名字、烹饪成本、价格
+    function Dish(name, cost, price) {
+        this.name = name;
+        this.cost = cost;
+        this.price = price;
+    }
+    // 测试用例
+/*    var ifeRestaurant = new Restaurant({
+        cash: 1000000,
+        seats: 20,
+        staff: []
+    });
+
+    var newCook = new Cook("Tony", 10000);
+    ifeRestaurant.hire(newCook);
+
+    console.log(ifeRestaurant.staff);
+
+    ifeRestaurant.fire(newCook);
+    console.log(ifeRestaurant.staff);*/
+</script>
+</body>
+</html>

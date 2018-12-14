@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OPP</title>
+</head>
+<body>
+
+<script !src="">
+    // 餐厅类
+    // 属性：金钱，座位数量、职员列表
+    // 方法：招聘职员，解雇职员
+
+    class Restaurant {
+        constructor({cash, seats, staff}) {
+            this.seats = seats;
+            this.cash = cash;
+            this.staff = staff;
+        }
+        hire (staff) {
+            let i = this.staff.indexOf(staff);
+            if (i === -1) {
+                this.staff.push(staff);
+            } else {
+                console.log("This staff " + staff.name + " already exists!")
+            }
+        }
+        fire (staff) {
+            let i = this.staff.indexOf(staff);
+            if (i !== -1) {
+                this.staff.splice(i, 1);
+            } else {
+                console.log("This staff " + staff.name + " does not exist!")
+            }
+        }
+    }
+
+    // 职员类
+    // 属性：ID，姓名，工资
+    // 方法：完成一次工作
+    class Staff {
+        constructor (id, name, salary) {
+            this.id = id;
+            this.name = name;
+            this.salary = salary;
+        }
+        doJob () {
+            console.log(this.name + "has finished 1 job!")
+        }
+    }
+
+    // 服务员类，继承自职员
+    // 完成一次工作：如果参数是个数组，则记录客人点菜，如果参数不是数组则是上菜行为
+    class Server extends Staff {
+        constructor (id, name, salary) {
+            super(id, name, salary);
+        }
+        doJob(dishes) {
+            if (Array.isArray(dishes)) {
+                console.log(this.name + "记录点餐：" + dishes.join(","))
+            } else {
+                console.log(this.name +"上菜了！")
+            }
+        }
+    }
+    // 厨师类，继承自职员
+    // 完成一次工作：烹饪出菜品
+    class Chef extends Staff {
+        constructor (id, name, salary) {
+            super(id, name, salary);
+        }
+        doJob () {
+            console.log(this.name + "出餐了")
+        };
+    }
+    // 顾客类
+    // 方法：点菜，吃
+    class Custormer {
+        constructor (name) {
+            this.name = name;
+        }
+        order (dishes) {
+            console.log(this.name + "点餐" + dishes.join(","));
+        }
+        eat (dish) {
+            console.log(this.name + "吃了" + dish.name);
+        }
+    }
+
+
+    // 菜品类
+    // 属性：名字、烹饪成本、价格
+    class Dish {
+        constructor (name, cost, price) {
+            this.name = name;
+            this.cost = cost;
+            this.price = price;
+        }
+    }
+    // 测试用例
+/*    var ifeRestaurant = new Restaurant({
+        cash: 1000000,
+        seats: 20,
+        staff: []
+    });
+
+    var newCook = new Cook("Tony", 10000);
+    ifeRestaurant.hire(newCook);
+
+    console.log(ifeRestaurant.staff);
+
+    ifeRestaurant.fire(newCook);
+    console.log(ifeRestaurant.staff);*/
+</script>
+</body>
+</html>

@@ -41,3 +41,6 @@
 ### day 39
 - [任务](http://ife.baidu.com/course/detail/id/57)
 - [作业](https://elilai666.github.io/IFE2018/day39/MIS.html)
+### day 44
+- [任务](http://ife.baidu.com/course/detail/id/59)
+- [作业](https://elilai666.github.io/IFE2018/day44/opp-singleton.html)
