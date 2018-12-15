@@ -1,58 +1,58 @@
 const init = () => {
-    let tableBox = document.getElementById("table-wrapper");
-    let formBox = document.getElementById("input-form");
-    const REGIONS = ['华东', '华北', '华南'];
-    const PRODUCTS = ['手机', '智能音箱', '笔记本'];
+    const tableBox = document.getElementById("table-wrapper");
+    const formBox = document.getElementById("input-form");
+    const FORMSELECTIONS = new Map([
+        ['region',['华东', '华北', '华南']],
+        ['product', ['手机', '智能音箱', '笔记本']]
+    ]);
     const TRANSLATION = {
         "region": "区域",
         "product": "产品"
     };
-    let dataObj = new Data(sourceData);
-    let initData = dataObj.getCurrentData();
-    let fromObj = new Form();
-    let tableObj = new Table(tableBox, initData, 3, 3);
-    let routerObj = new Router();
+    const dataObj = new Data(sourceData);
+    const initData = dataObj.getCurrentData();
+    const formObj = new Form();
+    const tableObj = new Table(tableBox, initData, 3, 3);
+    const routerObj = new Router();
 
     //生成checkbox
-    fromObj.generateCheckbox(document.getElementById("region-checkbox-wrapper"), REGIONS);
-    fromObj.generateCheckbox(document.getElementById("product-checkbox-wrapper"), PRODUCTS);
+    for (let [type, selections] of FORMSELECTIONS) {
+        formObj.generateCheckbox(document.getElementById(`${type}-checkbox-wrapper`), selections);
+    }
+
     renderPage();
     // 渲染整个页面
     function renderPage() {
-        let selectObj = routerObj.parseSelections();
-        let data = dataObj.getDataBy(selectObj.selectedRegions, selectObj.selectedProducts);
-        tableObj.updateTable(data, selectObj.selectedRegions.length, selectObj.selectedProducts.length);
+        let selectMap= routerObj.parseSelections();
+        let data = dataObj.getDataBy(selectMap);
+        let lengthArr = [];
+        for (let l of selectMap.values()) lengthArr.push(l.length);
+        tableObj.updateTable(data, ...lengthArr);
     }
-
+    // 处理前进后退
     window.onpopstate = function (e) {
         renderPage();
     };
-
+    // 表单处理事件
     formBox.onchange = function (e) {
         let target = e.target;
         // 点击全选
-        fromObj.checkOptions(target);
-        let selectedRegions = fromObj.getCheckedOptions("region");
-        let selectedProducts = fromObj.getCheckedOptions("product");
-        let regionsState = "";
-        let productState = "";
-        for (let region of REGIONS) {
-            if (selectedRegions.includes(region)) {
-                regionsState += "1";
-            } else {
-                regionsState += "0";
+        formObj.checkOptions(target);
+        let hashState = "";
+        for (let [type, selections] of FORMSELECTIONS.entries()) {
+            let checkedOptions = formObj.getCheckedOptions(type);
+            for (let selection of selections) {
+                if (checkedOptions.includes(selection)) {
+                    hashState += "1";
+                } else {
+                    hashState += "0";
+                }
             }
         }
-        for (let product of PRODUCTS) {
-            if (selectedProducts.includes(product)) {
-                productState += "1";
-            } else {
-                productState += "0";
-            }
-        }
-        routerObj.setHashValue(regionsState + productState);
+        routerObj.setHashValue(hashState);
         renderPage();
     };
+    //表格鼠标悬浮显示“edit”
     tableBox.onmouseover = function (e) {
         let target = e.target;
         if (target.className === "sales" && target.children.length === 0) {
@@ -65,6 +65,7 @@ const init = () => {
             target.className = target.className.split(" ")[0];
         }
     };
+    // 表格点击事件
     tableBox.onclick = function (e) {
         let target = e.target;
         // 点击销量
@@ -92,14 +93,14 @@ const init = () => {
             if (value.match(/^[0-9]+$/)) {
                 //确认是整数，保存
                 let saleInfoArr = target.parentElement.getAttribute("data-key").split(" ");
-                dataObj.updeData(value, saleInfoArr);
+                dataObj.updateData(value, saleInfoArr);
                 target.parentElement.setAttribute("sale", Number(value));
             } else {
                 alert("请检查输入");
             }
         }
     };
-    // onfocusout 支持冒泡 onblur不支持
+    // 点击其他位置，恢复之前的销量数据
     tableBox.addEventListener("focusout", (e) => {
         //延时执行，先响应点击
         setTimeout(function () {
@@ -131,7 +132,7 @@ const init = () => {
             localStorage.setItem("data_ife_eli", JSON.stringify(this.data));
         };
 
-        this.updeData = function (value, saleInfoArr) {
+        this.updateData = function (value, saleInfoArr) {
             for (let saleObj of this.data) {
                 // 数据过滤
                 if (saleObj.region === saleInfoArr[0] && saleObj.product === saleInfoArr[1]) {
@@ -142,26 +143,19 @@ const init = () => {
             this.saveLocalStorage();
         };
         // 根据regions, products数组筛选出对应数据
-        this.getDataBy = function (regions, products) {
-            let tmpData1 = [];
-            let tmpData2 = [];
-            // 先筛选地区
-            for (let region of regions) {
-                for (let dataItem of this.data) {
-                    if (dataItem.region === region) {
-                        tmpData1.push(dataItem);
-                    }
+        this.getDataBy = function (selectMap) {
+            let resultData = [];
+            // 筛选
+            for (let dataItem of this.data) {
+                let included = true;
+                for (let [type, selections] of selectMap) {
+                    included = included && selections.includes(dataItem[type])
+                }
+                if (included) {
+                    resultData.push(dataItem);
                 }
             }
-            // 再筛选产品
-            for (let product of products) {
-                for (let dataItem of tmpData1) {
-                    if (dataItem.product === product) {
-                        tmpData2.push(dataItem);
-                    }
-                }
-            }
-            return tmpData2;
+            return resultData;
         }
     }
     // 表单模块
@@ -334,51 +328,54 @@ const init = () => {
     //路由模块
     function Router() {
         this.getHashValue = function () {
-            return window.location.hash.slice(1, 7);
+            let selectedNum = 0;
+            for (let  selections of FORMSELECTIONS.values()) {
+                selectedNum += selections.length;
+            }
+            return window.location.hash.slice(1, 1+selectedNum);
         };
         this.setHashValue = function (value) {
             history.pushState({}, null, "#" + value);
         };
-        function checkSelections(switchState) {
-            let inputs = document.getElementsByTagName("input");
-            inputs = Array.prototype.slice.call(inputs);
-            // 筛选出除全选外的选项
-            let inputs_arr = inputs.filter(e => e.id.indexOf("_all") === -1);
-            for (let i in switchState) {
-                if (switchState[i] === "1") {
-                    inputs_arr[i].checked = true ;
-                } else {
-                    inputs_arr[i].checked = false ;
+        function getSelections(switchState) {
+            let selectedMap = new Map();
+            for(let key of FORMSELECTIONS.keys()) selectedMap.set(key, [])
+            let inputs = document.querySelectorAll("#input-form input");
+            inputs = Array.from(inputs);
+            let filteredInputs = inputs.filter(e => !e.id.includes("_all"));
+            let index = 0;
+            for (let [type, selections]  of FORMSELECTIONS.entries()) {
+                let allSection = document.getElementById(`${type}_all`)
+                let allChecked = true;
+                for (let selection of selections) {
+                    let checked = Boolean(+switchState[index]);
+                    if (checked) {
+                        selectedMap.get(type).push(selection);
+                    }
+                    filteredInputs[index].checked = checked;
+                    allChecked = allChecked && checked;
+                    index++;
                 }
+                allSection.checked = allChecked;
             }
+            return selectedMap;
         }
         this.parseSelections = function() {
             let hashValue = this.getHashValue();
-            let selectedRegions = [];
-            let selectedProducts = [];
-            if (hashValue === "111111" || !hashValue) {
-                selectedRegions = REGIONS;
-                selectedProducts = PRODUCTS;
+            let selectedMap;
+            // 政策情况：hash只有1和0
+            if (/^[10]+$/.test(hashValue)) {
+                selectedMap = getSelections(hashValue);
+
+                //异常情况默认全选
+            } else {
+                selectedMap = FORMSELECTIONS;
                 //全选
                 for (let ele of formBox.getElementsByTagName("input")) {
                     ele.checked = true;
                 }
-            } else {
-                checkSelections(hashValue);
-                let regionsState = hashValue.slice(0, 3);
-                let productState = hashValue.slice(3);
-                for (let i in regionsState) {
-                    if (regionsState[i] === "1") {
-                        selectedRegions.push(REGIONS[i]);
-                    }
-                }
-                for (let i in productState) {
-                    if (productState[i] === "1") {
-                        selectedProducts.push(PRODUCTS[i]);
-                    }
-                }
             }
-            return {"selectedRegions": selectedRegions, "selectedProducts": selectedProducts};
+            return selectedMap;
         }
     }
 };
